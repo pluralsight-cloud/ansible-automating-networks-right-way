@@ -1,0 +1,22 @@
+---
+- name: Gather current switchport state
+  arista.eos.eos_command:
+    commands:
+      - "show interfaces {{ port_change.interface }} switchport | json"
+  register: interface_before
+
+- name: Print current switchport state
+  ansible.builtin.debug:
+    var: interface_before
+
+- name: Validate that the requested interface exists
+  ansible.builtin.assert:
+    that:
+      - port_change.interface in interface_before.stdout[0].switchports
+    fail_msg: "{{ port_change.interface }} does not exist."
+
+- name: Validate that the interface is an access port
+  ansible.builtin.assert:
+    that:
+      - interface_before.stdout[0].switchports[port_change.interface].switchportInfo.mode == 'access'
+    fail_msg: "{{ port_change.interface }} is not an access port."

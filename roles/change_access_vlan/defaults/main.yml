@@ -1,0 +1,4 @@
+---
+port_change:
+  interface: Ethernet3
+  target_vlan: 30

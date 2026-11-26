@@ -1,0 +1,14 @@
+---
+- name: Create the target VLAN on the switch
+  arista.eos.eos_vlans:
+    config:
+      - vlan_id: "{{ port_change.target_vlan }}"
+    state: merged
+
+- name: Assign the target interface to the target VLAN
+  arista.eos.eos_l2_interfaces:
+    config:
+      - name: "{{ port_change.interface }}"
+        access:
+          vlan: "{{ port_change.target_vlan }}"
+    state: merged

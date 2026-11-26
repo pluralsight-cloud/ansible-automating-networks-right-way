@@ -1,0 +1,12 @@
+---
+- name: Run pre-change validation
+  ansible.builtin.include_tasks:
+    file: pre_change_validation.yml
+
+- name: Apply the access-port configuration
+  ansible.builtin.include_tasks:
+    file: configuration.yml
+
+- name: Run post-change validation
+  ansible.builtin.include_tasks:
+    file: post_change_validation.yml

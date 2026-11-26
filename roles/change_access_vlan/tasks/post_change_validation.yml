@@ -1,0 +1,22 @@
+---
+- name: Read fresh switchport state
+  arista.eos.eos_command:
+    commands:
+      - "show interfaces {{ port_change.interface }} switchport | json"
+  register: switchport_after
+
+- name: Validate the resulting access mode
+  ansible.builtin.assert:
+    that:
+      - switchport_after.stdout[0].switchports[port_change.interface].switchportInfo.mode == 'access'
+    fail_msg: "{{ port_change.interface }} is not an access port."
+
+- name: Validate the resulting access VLAN
+  ansible.builtin.assert:
+    that:
+      - >-
+        interface_after.stdout[0].switchports[port_change.interface]
+        .switchportInfo.accessVlanId
+        == port_change.target_vlan
+    fail_msg: >-
+      {{ port_change.interface }} is not in access VLAN {{ port_change.target_vlan }}.

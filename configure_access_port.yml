@@ -1,0 +1,7 @@
+---
+- name: Validate and configure an EOS access port
+  hosts: eos
+  gather_facts: false
+
+  roles:
+    - role: change_access_vlan

@@ -1,0 +1,21 @@
+---
+- name: Prepare the EOS access-port validation demo
+  hosts: eos
+  gather_facts: false
+
+  tasks:
+    - name: Create the initial VLAN
+      arista.eos.eos_vlans:
+        config:
+          - vlan_id: 10
+            name: VLAN10
+        state: merged
+
+    - name: Reset Ethernet3 to access VLAN 10
+      arista.eos.eos_l2_interfaces:
+        config:
+          - name: Ethernet3
+            mode: access
+            access:
+              vlan: 10
+        state: merged
